@@ -30,7 +30,9 @@ Chrono Harness 为项目提供按变更运行检查、协调工作树和安装�
 | [chrono-harness-host-bootstrap](https://github.com/chrono-harness/chrono-harness-host-bootstrap) | 按配方准备宿主工具 |
 | [chrono-harness-host-release](https://github.com/chrono-harness/chrono-harness-host-release) | 构建和发布宿主平台包 |
 
-Python 接入示例见 [chrono-harness-example](https://github.com/chrono-harness/chrono-harness-example)。
+Python 业务和它的 CI 在独立的 [chrono-harness-example](https://github.com/chrono-harness/chrono-harness-example)。
+
+本次拆分固定在原仓提交 `5f6892d`。20 个生产组件各自维护源码、专属测试和适用的 Verus 检查。基线登记的 38 个生产证明入口和 40 个测试证明入口均可在对应仓库的 `check.sh` 中找到。跨组件测试按业务选择断言；旧宿主的集成流程、运行记录和外部示例继续由原地址保管。[原仓固定版本](https://github.com/ChronoAIProject/chrono-harness/tree/5f6892dfa2f73675a84e4ebdc3b06eb83b824d6e)
 
 ## 运行产物
 
@@ -42,7 +44,15 @@ Python 接入示例见 [chrono-harness-example](https://github.com/chrono-harnes
 | 已采用的平台二进制 | 安装器、示例宿主 | 带版本的制品和摘要保存在 GitHub Releases。工具安装到工作树外的共享目录。 |
 | 日志与 PR 操作记录 | 诊断程序、PR 状态查询 | diagnostics 提供滚动日志。PR 记录受调用宿主的保留政策和维护执行约束。 |
 
-工作树创建时刻为 T，删除窗口为 W。若工作树已经登记、所有临时目录均允许处置、占用者已退出，并且在 T + W 后完成清理所需的维护轮次，维护程序可以删除工作树并保全 Git 提交。若维护停止，或者仍有受保护文件，单有时间流逝不足以保证删除。短窗口实测覆盖了清除生成文件、删除工作树和保留 Git 分支。跨所有宿主、所有输出的最终删除仍缺少无条件证明。
+工作树创建时刻为 T，删除窗口为 W。若工作树已经登记、所有临时目录均允许处置、占用者已退出，并且在 T + W 后完成清理所需的维护轮次，维护程序可以删除工作树并保全 Git 提交。若维护停止，或者仍有受保护文件，单有时间流逝不足以保证删除。macOS 的 launchd 定时验收使用已发布的 `chrono-worktree` 和示例政策，验收时将复用和删除门槛分别设为 1 秒和 2 秒。连续三轮维护均完成。第一轮已删除含 8 KiB 缓存的业务工作树，任务分支仍指向原提交。
+
+长期使用该示例的机器可用操作系统调度维护。比如用户 crontab 的下列条目每小时运行一次，把路径替换为主检出的绝对路径。程序在已登记的目录内保存本轮报告，标准错误沿用 cron 的投递配置。
+
+```cron
+0 * * * * cd "/absolute/path/to/chrono-harness-example" && .chrono-harness/bin/chrono-worktree maintain >/dev/null
+```
+
+跨所有宿主、所有输出的最终删除仍缺少无条件证明。
 
 ## 安装
 
