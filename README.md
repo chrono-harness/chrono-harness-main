@@ -19,6 +19,18 @@ Chrono Harness 为项目提供按变更运行检查、协调工作树和安装�
 
 共享工具安装一次。每项任务的构建输出、PR 状态、报告和临时文件归调用它的工作树，随工作树清理；仍存在的工作树按创建时配置的窗口清理，初始采用 24 小时。日志按配置滚动。跨任务需要的发布物由发布仓保存，并由使用方核验固定版本。
 
-## 采用状态
+## 安装当前组合
 
-已交付 [chrono-harness-diagnostics](https://github.com/chrono-harness/chrono-harness-diagnostics) 和 [chrono-harness-identifiers](https://github.com/chrono-harness/chrono-harness-identifiers)。两者各自带有测试与形式证明。组合安装版本及各平台验收结果将在首个可安装版本发布时列出。
+安装 Rust 1.95.0 后，在本仓检出中运行 `./install.sh`。Cargo 将命令安装在自身的安装目录中，可用 `CARGO_INSTALL_ROOT` 指定其他目录。工具仓库及源码提交由 [tools.lock](tools.lock) 固定。检出上一组合版本并重新运行安装命令即可切回相应版本。
+
+| 仓库 | 提供的内容 |
+| --- | --- |
+| [chrono-harness-runner](https://github.com/chrono-harness/chrono-harness-runner) | `chrono-harness` 检查命令和 Rust 库 |
+| [chrono-harness-pr](https://github.com/chrono-harness/chrono-harness-pr) | `chrono-pr` |
+| [chrono-harness-cache](https://github.com/chrono-harness/chrono-harness-cache) | `chrono-cache` |
+| [chrono-harness-instructions](https://github.com/chrono-harness/chrono-harness-instructions) | `chrono-instructions` 与生成资产的来源、许可 |
+| [chrono-harness-distribution](https://github.com/chrono-harness/chrono-harness-distribution) | `chrono-distribution` |
+| [chrono-harness-diagnostics](https://github.com/chrono-harness/chrono-harness-diagnostics) | 结构化错误与滚动日志库 |
+| [chrono-harness-identifiers](https://github.com/chrono-harness/chrono-harness-identifiers) | 标识符校验库及形式证明 |
+
+判官、CI、工作树和正式平台安装包仍在迁移。
