@@ -7,6 +7,8 @@
 通用规则来自本仓固定版 `chrono-instructions` 的默认清单。修改宿主登记后，运行 `mise exec -- chrono-instructions generate --host-root .`。
 
 
+业务检查使用 `mise run harness-check`。
+
 
 用 `mise exec -- chrono-pr pr-reminders` 查看本地提醒，再运行 `mise exec -- chrono-pr pr-status --pr NUMBER --head-sha SHA` 查询 GitHub。
 

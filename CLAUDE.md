@@ -4,7 +4,8 @@
 
 ## 本仓开发
 
-本仓维护历史组合发行的 [`tools.lock`](tools.lock)、[`install.sh`](install.sh) 与 [`package.sh`](package.sh)。打包参数及两个平台的验收步骤见 [`.github/workflows/package.yml`](.github/workflows/package.yml)。各工具的开发、安装及发版入口由对应工具仓维护。
+[README.md](README.md) 维护组件索引与历史发行链接。更新指令登记后运行 `mise run harness-check` 校验根指南。工具实现及发布在对应工具仓进行。
+
 <!-- chrono-instructions:begin -->
 本块列出已登记的单条工作规则。AGENTS.md 是相对符号链接，目标字面值为 CLAUDE.md。
 修改下方登记的 catalog、file 源或 manifest 后，运行 `chrono-instructions generate --host-root <host-root>`，不要单独编辑本块；块外文字由宿主维护。
