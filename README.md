@@ -1,8 +1,6 @@
 # Chrono Harness
 
-Chrono Harness 为项目提供按变更运行检查、协调工作树和安装工具的命令。这个主仓负责用户入口、兼容版本和组合安装。各组件负责自己的代码、测试和发布。
-
-组织内的仓库统一使用 `chrono-harness-<业务名>`。本仓为 `chrono-harness-main`，执行检查的组件为 `chrono-harness-runner`。
+本仓列出组织内的工具及其职责。在项目根目录使用[仓库模板](https://github.com/chrono-harness/chrono-harness-template)选择工具，安装器从每个工具自己的固定发行下载并校验。具体命令、源码和问题跟踪归各工具仓库。
 
 ## 组件归属
 
@@ -34,32 +32,6 @@ Python 业务和它的 CI 在独立的 [chrono-harness-example](https://github.c
 
 本次拆分固定在原仓提交 `5f6892d`。20 个生产组件各自维护源码、专属测试和适用的 Verus 检查。基线登记的 38 个生产证明入口和 40 个测试证明入口均可在对应仓库的 `check.sh` 中找到。跨组件测试按业务选择断言；旧宿主的集成流程、运行记录和外部示例继续由原地址保管。[原仓固定版本](https://github.com/ChronoAIProject/chrono-harness/tree/5f6892dfa2f73675a84e4ebdc3b06eb83b824d6e)
 
-## 运行产物
+## 历史发行
 
-| 业务目录或产物 | 消费者 | 存放与回收 |
-| --- | --- | --- |
-| 组件检查与组合编译 | Rust 测试、Verus、打包命令 | 各检查在临时目录构建，正常退出时删除。主仓安装器每次单独创建编译目录。 |
-| 工作树内的构建输出、工具链接、检查报告 | 正在运行的任务与汇总检查 | 示例的业务目录由 worktree 管理，删除窗口为 24 小时。需要长期保存的数据应在窗口内提交或转存。 |
-| GitHub Actions 的检查证据和跨平台中间包 | 汇总作业、发行作业 | 上传时设置保留期 1 天。 |
-| 已采用的平台二进制 | 安装器、示例宿主 | 带版本的制品和摘要保存在 GitHub Releases。工具安装到工作树外的共享目录。 |
-| 日志与 PR 操作记录 | 诊断程序、PR 状态查询 | diagnostics 提供滚动日志。PR 记录受调用宿主的保留政策和维护执行约束。 |
-
-工作树创建时刻为 T，删除窗口为 W。若工作树已经登记、所有临时目录均允许处置、占用者已退出，并且在 T + W 后完成清理所需的维护轮次，维护程序可以删除工作树并保全 Git 提交。若维护停止，或者仍有受保护文件，单有时间流逝不足以保证删除。macOS 的 launchd 定时验收使用已发布的 `chrono-worktree` 和示例政策，验收时将复用和删除门槛分别设为 1 秒和 2 秒。连续三轮维护均完成。第一轮已删除含 8 KiB 缓存的业务工作树，任务分支仍指向原提交。
-
-长期使用该示例的机器可用操作系统调度维护。比如用户 crontab 的下列条目每小时运行一次，把路径替换为主检出的绝对路径。程序在已登记的目录内保存本轮报告，标准错误沿用 cron 的投递配置。
-
-```cron
-0 * * * * cd "/absolute/path/to/chrono-harness-example" && .chrono-harness/bin/chrono-worktree maintain >/dev/null
-```
-
-跨所有宿主、所有输出的最终删除仍缺少无条件证明。
-
-## 安装
-
-安装 Rust 1.95.0 后，从本仓运行 `./install.sh`。安装器从 [tools.lock](tools.lock) 的固定提交构建命令，默认放入 Cargo 安装目录。用 `CARGO_INSTALL_ROOT` 指定工作树以外的共享位置。验证旧组合时，检出相应的主仓版本，选一个独立的安装目录并运行同一脚本。将该目录的 bin 加入 PATH 即可使用相应版本。
-
-## 平台包
-
-主仓从同一份工具清单构建 macOS arm64 和 Linux x86_64 平台包。带 v 前缀的发布标签触发构建，两个平台都通过后才发布预览版。构建中间件保留 1 天，最终二进制和校验清单放在 GitHub Releases。在工作树以外创建共享安装目录，供各任务调用。
-
-[双平台预览发行](https://github.com/chrono-harness/chrono-harness-main/releases/tag/v0.1.0-alpha.1)包含 18 个命令。[示例宿主的业务变更验收](https://github.com/chrono-harness/chrono-harness-example/actions/runs/45036350220)运行了 Python 单元与汇总作业。
+[组合预览版 v0.1.0-alpha.1](https://github.com/chrono-harness/chrono-harness-main/releases/tag/v0.1.0-alpha.1) 保有原来的两平台二进制、清单与校验值。新项目和现有项目都可以采用仓库模板。
