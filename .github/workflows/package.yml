@@ -50,7 +50,7 @@ jobs:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           path: ${{ runner.temp }}/packages
-      - name: Verify both packages and publish the prerelease
+      - name: Verify both packages and publish the tagged release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -64,4 +64,6 @@ jobs:
           done
           chmod +x "$linux/chrono-distribution-linux-x86_64"
           "$linux/chrono-distribution-linux-x86_64" assemble --input "$macos" --input "$linux" --output "$RUNNER_TEMP/release" --curl curl --base-url "https://github.com/$GITHUB_REPOSITORY/releases/download/$GITHUB_REF_NAME"
-          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --prerelease --title "$GITHUB_REF_NAME" --notes 'Pinned Chrono Harness tools for macOS arm64 and Linux x86_64.' "$RUNNER_TEMP"/release/*
+          flags=()
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then flags+=(--prerelease); fi
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag "${flags[@]}" --title "$GITHUB_REF_NAME" --notes 'Pinned Chrono Harness tools for macOS arm64 and Linux x86_64.' "$RUNNER_TEMP"/release/*
