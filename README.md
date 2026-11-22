@@ -2,6 +2,8 @@
 
 Chrono Harness 为项目提供按变更运行检查、协调工作树和安装工具的命令。这个主仓负责用户入口、兼容版本和组合安装。各组件负责自己的代码、测试和发布。
 
+组织内的仓库统一使用 `chrono-harness-<业务名>`。本仓为 `chrono-harness-main`，执行检查的组件为 `chrono-harness-runner`。
+
 ## 迁移顺序
 
 | 批次 | 组件与使用方 | 验收 |
@@ -19,4 +21,4 @@ Chrono Harness 为项目提供按变更运行检查、协调工作树和安装�
 
 ## 采用状态
 
-当前处于组件迁移阶段。组合安装版本及各平台验收结果将在首个可安装版本发布时列出。
+已交付 [chrono-harness-diagnostics](https://github.com/chrono-harness/chrono-harness-diagnostics) 和 [chrono-harness-identifiers](https://github.com/chrono-harness/chrono-harness-identifiers)。两者各自带有测试与形式证明。组合安装版本及各平台验收结果将在首个可安装版本发布时列出。
