@@ -1,0 +1,46 @@
+name: Platform packages
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  package:
+    strategy:
+      matrix:
+        runner: [macos-15, ubuntu-24.04]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - run: rustup toolchain install 1.95.0 --profile minimal
+      - run: ./package.sh "$GITHUB_REF_NAME" "$RUNNER_TEMP/package"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: package-${{ matrix.runner }}
+          path: ${{ runner.temp }}/package
+          retention-days: 1
+          if-no-files-found: error
+  release:
+    needs: package
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          path: ${{ runner.temp }}/packages
+      - name: Verify both packages and publish the prerelease
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          linux=packages/package-ubuntu-24.04
+          macos=packages/package-macos-15
+          for package in "$linux" "$macos"; do
+            jq -e --arg rev "$GITHUB_SHA" --arg tag "$GITHUB_REF_NAME" '.source_commit == $rev and .version == $tag' "$package/release.json"
+          done
+          chmod +x "$linux/chrono-distribution-linux-x86_64"
+          "$linux/chrono-distribution-linux-x86_64" assemble --input "$macos" --input "$linux" --output "$RUNNER_TEMP/release" --curl curl --base-url "https://github.com/$GITHUB_REPOSITORY/releases/download/$GITHUB_REF_NAME"
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --prerelease --title "$GITHUB_REF_NAME" --notes 'Pinned Chrono Harness tools for macOS arm64 and Linux x86_64.' "$RUNNER_TEMP"/release/*
