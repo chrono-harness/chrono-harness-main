@@ -30,6 +30,8 @@ Chrono Harness 为项目提供按变更运行检查、协调工作树和安装�
 | [chrono-harness-host-bootstrap](https://github.com/chrono-harness/chrono-harness-host-bootstrap) | 按配方准备宿主工具 |
 | [chrono-harness-host-release](https://github.com/chrono-harness/chrono-harness-host-release) | 构建和发布宿主平台包 |
 
+Python 接入示例见 [chrono-harness-example](https://github.com/chrono-harness/chrono-harness-example)。
+
 ## 运行产物
 
 共享工具安装一次。宿主应将每项任务的构建输出、PR 状态、报告和临时文件放在调用工作树中。业务目录的目标保留窗口为 24 小时。各组件迁入时保留了自己的输出合同，定时回收需要宿主配置与实际运行验证。日志按配置滚动。跨任务需要的发布物由发布仓保存，并由使用方核验固定版本。

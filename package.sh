@@ -8,7 +8,6 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 scratch=$(mktemp -d)
 trap 'rm -rf -- "$scratch"' EXIT
 export CARGO_INSTALL_ROOT="$scratch/tools"
-export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-$scratch/build}"
 "$root/install.sh"
 jq -Rn --arg version "$1" '
     [inputs | split(" ") | {key: .[0], value: ("bin/" + .[0])}] |
