@@ -1,7 +1,6 @@
-_commit: v0.1.0-alpha.5
+_commit: v0.1.0-alpha.6
 _src_path: gh:chrono-harness/chrono-harness-template
-check_command: chrono-instructions generate --host-root . && git diff --exit-code
-    -- CLAUDE.md AGENTS.md .chrono-harness/instructions
+check_command: chrono-instructions rules --host-root .
 check_os: ubuntu-24.04
 dev_branch: dev
 features:
