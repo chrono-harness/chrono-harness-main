@@ -58,6 +58,16 @@ PR
              +--> chrono-harness check --collect --> PR 检查结果
 ```
 
+需要核对变更成本和规则变更的宿主还可以采用下列命令。FILEMAP 的影响报告和 cost 的成本报告都绑定固定的 Git 端点。mixed 在求值前检查两个报告的来源，任一缺失或绑定不匹配时报告错误。示例已逐项安装、升级和回退这些工具。[成本消费](https://github.com/chrono-harness/chrono-harness-example/pull/41) · [mixed 消费](https://github.com/chrono-harness/chrono-harness-example/pull/42)
+
+```text
+宿主变更 --> FILEMAP --> 影响报告 --+--> cost --> 成本报告 --+
+                                    |                       |
+                                    +-----------------------+--> mixed
+```
+
+在执行计划中，routes 负责校验并发上限、优先顺序及计划身份。projects 从已安装的 routes 查询计划，按上限并行运行操作，避开共享资源与重叠的输出路径。宿主分别固定这两个工具的发行。[示例执行与回退](https://github.com/chrono-harness/chrono-harness-example/pull/43)
+
 ## 独立化方向
 
 部分工具构建时仍从 runner、judge-registration 或 diagnostics 拉取 Rust 源码。按真实使用方逐条迁移。有独立用途的工具保留公开命令和版本化输入输出。只服务于一个产品的实现、测试和证明归入该产品。[当前依赖清单与迁移验收](https://github.com/chrono-harness/chrono-harness-runner/issues/1)
@@ -109,7 +119,7 @@ PR
 | [chrono-harness-cache](https://github.com/chrono-harness/chrono-harness-cache) | 计划、恢复和封存缓存 |
 | [chrono-harness-instructions](https://github.com/chrono-harness/chrono-harness-instructions) | 生成宿主指南并提供默认规则和许可 |
 | [chrono-harness-distribution](https://github.com/chrono-harness/chrono-harness-distribution) | 打包、组合、校验及安装平台发布物 |
-| [chrono-harness-judge-registration](https://github.com/chrono-harness/chrono-harness-judge-registration) | 验证登记、执行方法和消费合同 |
+| [chrono-harness-judge-registration](https://github.com/chrono-harness/chrono-harness-judge-registration) | 验证登记、执行方法和输入合同 |
 | [chrono-harness-judge-mixed](https://github.com/chrono-harness/chrono-harness-judge-mixed) | 识别规则和产品的混合变更 |
 | [chrono-harness-judge-filemap](https://github.com/chrono-harness/chrono-harness-judge-filemap) | 根据登记图计算变更影响和必须运行的测试 |
 | [chrono-harness-judge-routes](https://github.com/chrono-harness/chrono-harness-judge-routes) | 将测试义务解析为已登记的方法与工具 |
@@ -117,7 +127,7 @@ PR
 | [chrono-harness-judge-projects](https://github.com/chrono-harness/chrono-harness-judge-projects) | 执行选定项目的构建和测试并核验回执 |
 | [chrono-harness-judge-workflow](https://github.com/chrono-harness/chrono-harness-judge-workflow) | 判断分支、集成证据与退役条件 |
 | [chrono-harness-inputs](https://github.com/chrono-harness/chrono-harness-inputs) | 从固定版本读取检查输入 |
-| [chrono-harness-judge-ci](https://github.com/chrono-harness/chrono-harness-judge-ci) | 核对执行单元的原始结果并汇总 CI 状态 |
+| [chrono-harness-judge-ci](https://github.com/chrono-harness/chrono-harness-judge-ci) | 核对启动产物的消费关系、执行单元的原始结果并汇总 CI 状态 |
 | [chrono-harness-ci](https://github.com/chrono-harness/chrono-harness-ci) | 生成宿主 CI 工作流并计算执行范围 |
 | [chrono-harness-worktree](https://github.com/chrono-harness/chrono-harness-worktree) | 创建、管理与清理任务工作树 |
 | [chrono-harness-host-bootstrap](https://github.com/chrono-harness/chrono-harness-host-bootstrap) | 按配方准备宿主工具 |
