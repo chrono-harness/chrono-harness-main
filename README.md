@@ -18,6 +18,26 @@ mise run harness-setup
 
 按下表找到负责该功能的仓库，从其默认分支 `dev` 单独检出。根指南给出本仓的安装和验证命令，修改也向该仓的 `dev` 提 PR。各工具仓单独发布发行包，`main` 分支用于正式版。要查看业务项目怎样接入并运行 CI，可以从 Python 示例的工作流开始。[业务示例](https://github.com/chrono-harness/chrono-harness-example)
 
+## 从 Issue 到正式版
+
+在负责产品的仓库开 Issue。仓库的 **Issues → Milestones** 显示目标版本和仍开放的事项。跨仓目标可以将各产品自己的 Issue 登记为子事项，GitHub 会从它们的实际开关状态计算进度。[模板路线图](https://github.com/chrono-harness/chrono-harness-template/issues/48) · [chrono-pr 发行试点](https://github.com/chrono-harness/chrono-harness-pr/issues/5)
+
+```text
+Issue --> 本仓版本里程碑 --> PR 合入 dev --> 本仓检查通过
+                                                |
+                                                v
+                                       本产品的测试版 Release
+                                                |
+                              两平台安装和校验 + 真实下游使用
+                                                |
+                                                v
+                                同一候选晋升 main --> 正式版
+                                                |
+                              正式版已公开且事项完成 --> 关闭里程碑
+```
+
+模板的路线图工作流从本仓版本计划和 GitHub Releases 更新里程碑。每个产品单独采用发布自动化；chrono-pr 试点跟踪从 dev 自动创建预览、验证真实下游和晋升 main 的实施情况。
+
 ## 仓库如何配合
 
 图中仓库名省略了 `chrono-harness-` 前缀。业务仓和工具仓都可以独立采用模板。
