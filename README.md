@@ -4,7 +4,7 @@
 
 ## 在自己的项目中使用
 
-准备好 Git、uv 和 mise，在项目根目录执行以下命令。Copier 会询问 GitHub 仓库名并记录所选模板版本。保留默认选择会安装 20 个 Chrono 命令、Rust 和 Verus。按空格可以取消本项目用不到的选项，也可以全部取消。
+准备好 Git、uv 和 mise，在项目根目录执行以下命令。Copier 会询问 GitHub 仓库名并记录所选模板版本。默认安装各工具的已发布命令、Rust 和 Verus。按空格可以取消本项目用不到的选项，也可以全部取消。
 
 ```sh
 uvx --from copier==9.19.1 copier copy --prereleases gh:chrono-harness/chrono-harness-template .
@@ -85,7 +85,9 @@ PR
                  |                +-- 需要长期查阅 --> 窗口内转存到指定存储
                  +-- PR 提醒 --> agent 查看 --> 终态、过期或 worktree 回收
 
-运行日志 --> 宿主选择的日志目录 --> 按保留期滚动清理
+运行日志 --> 宿主选择的日志目录
+               ^
+               +-- worktree 定时维护 --> diagnostics 回收过期日志并报告结果
 ```
 
 `chrono-pr` 每次远端查询都读取 GitHub。它在本地记录本工作树中由自己打开的 PR。查到关闭或合并时移除提醒，每次使用命令也会清除创建满 30 天的提醒。[PR 工具](https://github.com/chrono-harness/chrono-harness-pr#readme)
@@ -93,6 +95,8 @@ PR
 示例的开发机按主检出安装一个用户定时器。macOS 用 launchd，Linux 用 systemd，均按小时运行 `chrono-worktree maintain`。示例的工作树删除窗口为 24 小时；两个平台都已用缩短的窗口验证定时任务能回收闲置树及缓存。Linux 验收还核对了持久启用链接。清理仍取决于机器与用户服务运行、租约释放、源码保全及文件系统操作成功。[示例部署与卸载](https://github.com/chrono-harness/chrono-harness-example/blob/1c5f98e72f964b9fd2a19bad18de55ecaadc6a74/README.md#为开发机的主检出启用定时清理) · [工作树期限的证明范围](https://github.com/chrono-harness/chrono-harness-worktree/pull/7)
 
 每个业务目录仍需核对写入程序、实际读取者、保留时长和负责删除的程序。宿主验收应覆盖最后一次写入后工具再也没有启动的情形。要给出最晚清理时间，还需要验证到期工作树最终释放、清理程序按期运行并成功删除，以及长期产物在窗口内已由接收方读回。各宿主的全量回收证明仍待完成。
+
+示例启用文件日志时，worktree 调用宿主安装的 `chrono-diagnostics expire-logs-v1`。该命令按日志策略回收过期文件，并向维护进程返回删除数量、占用或具体的失败路径。macOS 和 Ubuntu 均用已发布的 runner 写入日志、用独立发行完成了回收与错误验收。[双平台运行](https://github.com/chrono-harness/chrono-harness-example/actions/runs/45243841345) · [示例采用](https://github.com/chrono-harness/chrono-harness-example/pull/38)
 
 ## 组件归属
 
