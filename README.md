@@ -18,6 +18,8 @@ mise run harness-setup
 
 按下表找到负责该功能的仓库，从其默认分支 `dev` 单独检出。根指南给出本仓的安装和验证命令，修改也向该仓的 `dev` 提 PR。各工具仓单独发布发行包，`main` 分支用于正式版。要查看业务项目怎样接入并运行 CI，可以从 Python 示例的工作流开始。[业务示例](https://github.com/chrono-harness/chrono-harness-example)
 
+部分组件的 Cargo 构建仍会拉取组织内其他仓库的源码。修改组件前，可以在拆分计划中查到它的使用方、当前源码依赖和已验收的独立发行。[组件拆分进度与验收记录](https://github.com/chrono-harness/chrono-harness-runner/issues/1)
+
 ## 组件归属
 
 | 仓库 | 职责 |
