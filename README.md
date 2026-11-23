@@ -1,6 +1,22 @@
 # Chrono Harness
 
-本仓列出组织内的工具及其职责。在项目根目录使用[仓库模板](https://github.com/chrono-harness/chrono-harness-template)选择工具，安装器从每个工具自己的固定发行下载并校验。具体命令、源码和问题跟踪归各工具仓库。
+从这里为项目接入 Chrono Harness，或找到负责某项功能的开发仓库。
+
+## 在自己的项目中使用
+
+准备好 Git、uv 和 mise，在项目根目录执行以下命令。Copier 会询问 GitHub 仓库名并记录所选模板版本。组件默认全选，按空格可取消本项目用不到的工具。
+
+```sh
+uvx --from copier==9.19.1 copier copy --prereleases gh:chrono-harness/chrono-harness-template .
+mise trust
+mise run harness-setup
+```
+
+安装后，从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。项目自己的工具选择保存在 `.chrono-harness/template-answers.yml`，mise 按项目记录的版本和 SHA-256 安装各工具。调整选项或升级已有项目时，使用模板的 Copier 更新命令。[模板与更新说明](https://github.com/chrono-harness/chrono-harness-template)
+
+## 开发组件
+
+按下表找到负责该功能的仓库，从其默认分支 `dev` 单独检出。根指南给出本仓的安装和验证命令，修改也向该仓的 `dev` 提 PR。各工具仓单独发布发行包，`main` 分支用于正式版。要查看业务项目怎样接入并运行 CI，可以从 Python 示例的工作流开始。[业务示例](https://github.com/chrono-harness/chrono-harness-example)
 
 ## 组件归属
 
@@ -27,8 +43,6 @@
 | [chrono-harness-worktree](https://github.com/chrono-harness/chrono-harness-worktree) | 创建、管理与清理任务工作树 |
 | [chrono-harness-host-bootstrap](https://github.com/chrono-harness/chrono-harness-host-bootstrap) | 按配方准备宿主工具 |
 | [chrono-harness-host-release](https://github.com/chrono-harness/chrono-harness-host-release) | 构建和发布宿主平台包 |
-
-Python 业务和它的 CI 在独立的 [chrono-harness-example](https://github.com/chrono-harness/chrono-harness-example)。
 
 本次拆分固定在原仓提交 `5f6892d`。20 个生产组件各自维护源码、专属测试和适用的 Verus 检查。基线登记的 38 个生产证明入口和 40 个测试证明入口均可在对应仓库的 `check.sh` 中找到。跨组件测试按业务选择断言；旧宿主的集成流程、运行记录和外部示例继续由原地址保管。[原仓固定版本](https://github.com/ChronoAIProject/chrono-harness/tree/5f6892dfa2f73675a84e4ebdc3b06eb83b824d6e)
 
