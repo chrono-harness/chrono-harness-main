@@ -4,15 +4,17 @@
 
 ## 在自己的项目中使用
 
-准备好 Git、uv 和 mise，在项目根目录执行以下命令。Copier 会询问 GitHub 仓库名并记录所选模板版本。默认安装各工具的已发布命令、Rust 和 Verus。按空格可以取消本项目用不到的选项，也可以全部取消。
+创建新仓库可以直接点击 [Use this template](https://github.com/chrono-harness/chrono-harness-template/generate)。新仓的根指南包含基础规则，首次检出按 README 运行安装。
+
+已有项目可以直接使用 Copier。准备好 Git、uv 和 mise，在项目根目录执行以下命令。Copier 会询问 GitHub 仓库名并记录所选模板版本。默认安装各工具的已发布命令、Rust 和 Verus。按空格可以取消本项目用不到的选项，也可以全部取消。
 
 ```sh
-uvx --from copier==9.19.1 copier copy --prereleases gh:chrono-harness/chrono-harness-template .
+uvx --from copier==9.19.1 copier copy --prereleases gh:chrono-harness/chrono-harness-copier .
 mise trust
 mise run harness-setup
 ```
 
-安装后，从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。项目自己的工具选择保存在 `.chrono-harness/template-answers.yml`，mise 按项目记录的版本和 SHA-256 安装各工具。调整选项或升级已有项目时，使用模板的 Copier 更新命令。[模板与更新说明](https://github.com/chrono-harness/chrono-harness-template)
+安装后，从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。项目自己的工具选择保存在 `.chrono-harness/template-answers.yml`，mise 按项目记录的版本和 SHA-256 安装各工具。调整选项或升级已有项目时，使用模板的 Copier 更新命令。[Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
 
 ## 开发组件
 
@@ -44,7 +46,8 @@ Issue --> 本仓版本里程碑 --> PR 合入 dev --> 本仓检查通过
 
 ```text
 main
-  +-- 用户接入 --> template (Copier) --> 宿主仓库
+  +-- 新项目 ----> template (Use this template) --+
+  +-- 已有项目 --> copier (选择工具、更新) --------+--> 宿主仓库
   |                                      +-- AGENTS.md -> CLAUDE.md
   |                                      |                ^ 本仓选择的上游规则
   |                                      +-- mise 工具版本和 SHA-256
