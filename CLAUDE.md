@@ -1,10 +1,10 @@
 # chrono-harness/chrono-harness-main 工作说明
 
-本仓维护组织组件索引和历史发行链接。
+本仓是 Chrono Harness 用户与开发者的入口，维护项目接入步骤、组件索引和历史发行链接。
 
 ## 本仓开发
 
-[README.md](README.md) 维护组件索引与历史发行链接。运行 `mise run harness-check` 读取本仓接纳的上游规则。工具实现及发布在对应工具仓进行。
+[README.md](README.md) 提供项目接入步骤、组件开发入口和历史发行链接。运行 `mise run harness-check` 读取本仓接纳的上游规则。工具实现及发布在对应工具仓进行。
 
 日常开发和 PR 使用 `dev`，正式版本从 `main` 发布。
 
@@ -15,7 +15,7 @@ mise trust
 mise run harness-setup
 ```
 
-本仓选装的工具为 `cache`、`ci`、`distribution`、`harness`、`host-bootstrap`、`host-release`、`inputs`、`instructions`、`judge-ci`、`judge-cost`、`judge-filemap`、`judge-mixed`、`judge-projects`、`registration`、`judge-routes`、`judge-workflow`、`pr`、`worktree`、`verus`。
+本仓选装的工具为 `cache`、`ci`、`distribution`、`harness`、`host-bootstrap`、`host-release`、`inputs`、`instructions`、`judge-ci`、`judge-cost`、`judge-filemap`、`judge-mixed`、`judge-projects`、`registration`、`judge-routes`、`judge-workflow`、`pr`、`test-git`、`worktree`、`verus`。
 
 本仓安装选择保存在 `.chrono-harness/template-answers.yml`，版本和平台校验值保存在 `.config/mise/conf.d/chrono-harness.toml`。
 

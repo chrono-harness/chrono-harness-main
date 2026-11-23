@@ -21,6 +21,7 @@ features:
 - judge-routes
 - judge-workflow
 - pr
+- test-git
 - worktree
 - verus
 generate_check: true
