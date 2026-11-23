@@ -18,7 +18,46 @@ mise run harness-setup
 
 按下表找到负责该功能的仓库，从其默认分支 `dev` 单独检出。根指南给出本仓的安装和验证命令，修改也向该仓的 `dev` 提 PR。各工具仓单独发布发行包，`main` 分支用于正式版。要查看业务项目怎样接入并运行 CI，可以从 Python 示例的工作流开始。[业务示例](https://github.com/chrono-harness/chrono-harness-example)
 
-部分组件的 Cargo 构建仍会拉取组织内其他仓库的源码。修改组件前，可以在拆分计划中查到它的使用方、当前源码依赖和已验收的独立发行。[组件拆分进度与验收记录](https://github.com/chrono-harness/chrono-harness-runner/issues/1)
+## 仓库如何配合
+
+图中仓库名省略了 `chrono-harness-` 前缀。业务仓和工具仓都可以独立采用模板。
+
+```text
+main
+  +-- 用户接入 --> template (Copier) --> 宿主仓库
+  |                                      +-- AGENTS.md -> CLAUDE.md
+  |                                      |                ^ 本仓选择的上游规则
+  |                                      +-- mise 工具版本和 SHA-256
+  |                                      |       |
+  |                                      |       +--> 从各工具的 Release 安装
+  |                                      +-- 项目源码、登记和本仓检查
+  |
+  +-- 开发组件 --> 工具仓 dev --> 本仓 PR、测试和证明 --> 本仓 Release
+```
+
+模板的根指南和使用说明都链接回本入口。默认选装全部工具，宿主可以关闭某些工具、按 ID 选择基础规则并追加本地指令。`instructions` 在宿主执行 `harness-setup` 时同步被选中的上游规则。
+
+在示例仓，一次 PR 使用固定的 Git 提交确定受影响的执行单元。选中的单元运行本仓检查，汇总作业读取它们的原始结果。[示例工作流](https://github.com/chrono-harness/chrono-harness-example/blob/dev/.github/workflows/chrono-ci.yml)
+
+```text
+PR --> chrono-ci detect --> 被选中的单元 --> chrono-harness check
+                                                  |
+                                                  v
+                                单元原始结果 --> CI 汇总
+```
+
+## 独立化方向
+
+部分工具构建时仍从 runner、judge-registration 或 diagnostics 拉取 Rust 源码。按真实使用方逐条迁移。有独立用途的工具保留公开命令和版本化输入输出。只服务于一个产品的实现、测试和证明归入该产品。[当前依赖清单与迁移验收](https://github.com/chrono-harness/chrono-harness-runner/issues/1)
+
+```text
+工具 A 单独检出 + 第三方依赖
+    --> 构建、原生测试和适用证明
+    --> A 的版本及各平台校验值
+    --> 宿主仅升级 A --> 真实业务调用 --> 单独回退 A
+```
+
+每条迁移以实际下游验收。固定其他工具版本且 main 缺席时，维护者仍须能交付 A，用户仍须能安装、使用及回退 A。
 
 ## 组件归属
 
