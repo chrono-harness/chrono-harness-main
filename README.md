@@ -37,13 +37,25 @@ main
 
 模板的根指南和使用说明都链接回本入口。默认选装全部工具，宿主可以关闭某些工具、按 ID 选择基础规则并追加本地指令。`instructions` 在宿主执行 `harness-setup` 时同步被选中的上游规则。
 
-在示例仓，一次 PR 使用固定的 Git 提交确定受影响的执行单元。选中的单元运行本仓检查，汇总作业读取它们的原始结果。[示例工作流](https://github.com/chrono-harness/chrono-harness-example/blob/dev/.github/workflows/chrono-ci.yml)
+在 Python 示例仓，`chrono-ci detect` 根据固定 Git 提交和宿主登记选择执行单元。单元调用 runner 的 `chrono-harness check`。CI 判官从各工具的公开命令读取所需数据。下图中的连线表示一次 PR 的实际调用或产物交接。[示例工作流](https://github.com/chrono-harness/chrono-harness-example/blob/1c5f98e72f964b9fd2a19bad18de55ecaadc6a74/.github/workflows/chrono-ci.yml) · [CI 判官的已安装工具接口](https://github.com/chrono-harness/chrono-harness-judge-ci/blob/2611c5f34b261b783c56d837a6d2d7a1a335136f/README.md)
 
 ```text
-PR --> chrono-ci detect --> 被选中的单元 --> chrono-harness check
-                                                  |
-                                                  v
-                                单元原始结果 --> CI 汇总
+PR
+ +--> chrono-ci detect --> 选中 example 或 harness 单元，也可同时选中
+                              |
+                              v
+                     chrono-harness check --unit
+                              |
+                              v
+                           judge-ci
+                              +--> judge-filemap        根据登记计算影响范围
+                              +--> judge-registration   读取两端的测试绑定
+                              +--> judge-routes         准备执行计划
+                              +--> judge-projects       核对配对、执行、返回回执
+                                                        |
+      GitHub 汇总作业 <--- 单元原件（保留 1 天） <---------+
+             |
+             +--> chrono-harness check --collect --> PR 检查结果
 ```
 
 ## 独立化方向
@@ -77,6 +89,8 @@ PR --> chrono-ci detect --> 被选中的单元 --> chrono-harness check
 ```
 
 `chrono-pr` 每次远端查询都读取 GitHub。它在本地记录本工作树中由自己打开的 PR。查到关闭或合并时移除提醒，每次使用命令也会清除创建满 30 天的提醒。[PR 工具](https://github.com/chrono-harness/chrono-harness-pr#readme)
+
+示例的开发机按主检出安装一个用户定时器。macOS 用 launchd，Linux 用 systemd，均按小时运行 `chrono-worktree maintain`。示例的工作树删除窗口为 24 小时；两个平台都已用缩短的窗口验证定时任务能回收闲置树及缓存。Linux 验收还核对了持久启用链接。清理仍取决于机器与用户服务运行、租约释放、源码保全及文件系统操作成功。[示例部署与卸载](https://github.com/chrono-harness/chrono-harness-example/blob/1c5f98e72f964b9fd2a19bad18de55ecaadc6a74/README.md#为开发机的主检出启用定时清理) · [工作树期限的证明范围](https://github.com/chrono-harness/chrono-harness-worktree/pull/7)
 
 每个业务目录仍需核对写入程序、实际读取者、保留时长和负责删除的程序。宿主验收应覆盖最后一次写入后工具再也没有启动的情形。要给出最晚清理时间，还需要验证到期工作树最终释放、清理程序按期运行并成功删除，以及长期产物在窗口内已由接收方读回。各宿主的全量回收证明仍待完成。
 
