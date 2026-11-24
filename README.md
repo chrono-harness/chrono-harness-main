@@ -22,6 +22,8 @@ mise run harness-setup
 
 ## 从 Issue 到正式版
 
+[SPEC 开发路线图](https://github.com/chrono-harness/chrono-harness-main/issues/15) 按固定版本的条款列出 93 个验收场景。每个场景链接到负责产品的 Issue，可查看依赖、验收条件和实际交付。
+
 在负责产品的仓库开 Issue。仓库的 **Issues → Milestones** 显示目标版本和仍开放的事项。跨仓目标可以将各产品自己的 Issue 登记为子事项，GitHub 会从它们的实际开关状态计算进度。[Copier 路线图](https://github.com/chrono-harness/chrono-harness-copier/issues/6) · [chrono-pr 发行试点](https://github.com/chrono-harness/chrono-harness-pr/issues/5)
 
 ```text
@@ -91,9 +93,9 @@ PR
 
 在执行计划中，routes 负责校验并发上限、优先顺序及计划身份。projects 从已安装的 routes 查询计划，按上限并行运行操作，避开共享资源与重叠的输出路径。宿主分别固定这两个工具的发行。[示例执行与回退](https://github.com/chrono-harness/chrono-harness-example/pull/43)
 
-## 独立化方向
+## 独立构建与发行
 
-部分工具构建时仍从 runner、judge-registration 或 diagnostics 拉取 Rust 源码。按真实使用方逐条迁移。有独立用途的工具保留公开命令和版本化输入输出。只服务于一个产品的实现、测试和证明归入该产品。[当前依赖清单与迁移验收](https://github.com/chrono-harness/chrono-harness-runner/issues/1)
+组织上轮审计核对了 25 个仓库、41 份 Cargo 清单，跨仓生产源码依赖从 50 条减至 0 条。工具通过各自的发行包、公开命令和版本化输入输出协作。[固定版本源码审计](https://github.com/chrono-harness/chrono-harness-runner/issues/1#issuecomment-7122055493) · [下游采用验收](https://github.com/chrono-harness/chrono-harness-runner/issues/1#issuecomment-7122569983)
 
 ```text
 工具 A 单独检出 + 第三方依赖
