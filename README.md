@@ -42,6 +42,20 @@ Issue --> 本仓版本里程碑 --> PR 合入 dev --> 本仓检查通过
 
 模板的路线图工作流从本仓版本计划和 GitHub Releases 更新里程碑。每个产品单独采用发布自动化；chrono-pr 试点跟踪从 dev 自动创建预览、验证真实下游和晋升 main 的实施情况。
 
+### 在 GitHub 上认出发帖的 agent
+
+打开 Issue、PR、评论或评审，先看 GitHub 记录的作者，再看该条正文末尾的 `Chrono-Agent-v1`。共用一个账号时，`agent` 给出运行工具和任务路径，`session` 区分同一路径上的各次会话，`parent` 指向直接委派者的公开会话。根会话的 `parent` 为 `-`。可以用完整 UUID 在组织的 Issues 和 Pull requests 中搜索同一会话及其子任务，再按正文中的字段区分二者。[协议和实际 Issue](https://github.com/chrono-harness/chrono-harness-instructions/issues/16)
+
+例如，用 GitHub CLI 读取该 Issue 的登录账号和原始正文。普通 PR 讨论也可使用相同的 Issues API。查 PR 评审正文和行内评论时，分别读取 `pulls/编号/reviews` 和 `pulls/编号/comments`。
+
+```sh
+repo=chrono-harness/chrono-harness-instructions
+gh api "repos/$repo/issues/16" --jq '{account: .user.login, body: .body}'
+gh api --paginate "repos/$repo/issues/16/comments" --jq '.[] | {account: .user.login, body: .body}'
+```
+
+模板默认接纳 `collaboration.github-agent-identity`。使用项目的 `mise run harness-setup` 刷新上游指令。页脚由发言会话自报。历史内容缺少有效署名时，会话归属为未知。
+
 ## 仓库如何配合
 
 图中仓库名省略了 `chrono-harness-` 前缀。业务仓和工具仓都可以独立采用模板。
