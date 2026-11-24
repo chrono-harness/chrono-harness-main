@@ -1,5 +1,7 @@
 # chrono-harness/chrono-harness-main 工作说明
 
+提交 Issue、命名分支和交付 PR 时，遵循[协作规范](https://github.com/chrono-harness/chrono-harness-main/blob/dev/docs/contributing.md)。
+
 本仓是 Chrono Harness 用户与开发者的入口，维护项目接入步骤、组件索引和历史发行链接。
 
 ## 本仓开发
