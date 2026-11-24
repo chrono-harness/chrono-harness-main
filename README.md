@@ -44,19 +44,23 @@ Issue --> 本仓版本里程碑 --> PR 合入 dev --> 本仓检查通过
 
 ### 从 GitHub 正文读取 agent 的工作事件
 
-新 Issue、PR、评论或评审把动作和状态放在正文最后一条纯文本事件中。GitHub 提供发布账号和对象地址，事件记录会话自报的 agent 路径、直接父会话、任务和具体进展。一次任务可由多个会话继续，各自保留独立 session。一个 task 下的每次有意义变化各有 event。已经开始的检查进入等待时发一次 ci.wait/waiting，收到真实结果后用同一 task 写 check/succeeded 或 check/failed。[真实事件](https://github.com/chrono-harness/chrono-harness-instructions/pull/21)
+Issue、PR、评论或评审先用平常的话说明工作，再在末尾附一条工作事件。例如发布者可以写“已发布 chrono-pr v0.1.5”，页面在下方显示一行摘要。
 
-在已选装的宿主用以下命令读取真实 PR 正文；输出 JSON 的字段顺序为 agent、session、parent、task、event、action、state、target。root 的 parent 写 -，普通评论和评审可分别从 issues/编号/comments、pulls/编号/reviews、pulls/编号/comments 获取原文。
+> **Agent** `codex/root` · **action** `release` · **state** `succeeded` · **target** `chrono-harness/chrono-harness-pr/tag/v0.1.5`
 
-~~~sh
-gh api repos/chrono-harness/chrono-harness-instructions/pulls/21 |
+这行摘要本身就是机器读取的字段。Markdown 原文用两行 HTML 注释包住摘要，两行拥有同一个 `event` UUID。开头还记录 `session`、直接父会话 `parent` 和 `task`。GitHub 渲染时隐藏这两行。每次有意义的进展换一个 `event`，并行会话各有自己的 `session`，同一项工作沿用同一个 `task`。汇总时按 `event` 去重，用 GitHub 的发布时间还原顺序。
+
+在采用模板的宿主，以下命令读取指定 PR 的原始正文、校验配对并输出八个字段。Issue、评论和评审也可用各自 API 返回的 `body`。原始正文中含代码示例或引用时，`event-read` 会区分示例与末尾的顶层事件。
+
+```sh
+gh api "repos/$OWNER/$REPO/pulls/$NUMBER" |
   jq -j .body | mise exec -- chrono-instructions event-read
 mise exec -- chrono-instructions event-regex
-~~~
+```
 
-编写新事件时，将八个实际值写成 JSON 后交给 chrono-instructions event-format。新会话、任务和事件各自生成公开随机小写 UUIDv4。独立任务、直接父会话和具体 GitHub 对象的写法见可继承的默认规则。相同 event 的重复投递合并，遇到字段冲突时记录未知；保留原始 GitHub 时间，乱序到达的记录不会自动改写之前的结论。完整行可以由他人复制，作者身份和完成状态仍需对照 GitHub 账号及实际 PR、检查或发布原件。[协议与可复制正则](https://github.com/chrono-harness/chrono-harness-instructions/blob/8c7c190bedb200323303dbb2b44b2df7fb6c0b7b/assets/instructions/github-event-v2.regex)
+`event-regex` 输出完整正则，八个捕获组依次是 `event`、`session`、`parent`、`task`、`agent`、`action`、`state`、`target`。关闭标记引用开头捕获的 `event`，两端 UUID 不同或缺失一端都会匹配失败。编写新事件时，把八个字段作为 JSON 传给 `event-format`，再将它生成的三行原样附在正文末尾。作者账号由 GitHub 提供，自报的工作结果可从相应 PR、CI 运行或发行核实。[工具与协议](https://github.com/chrono-harness/chrono-harness-instructions)
 
-模板默认接纳 collaboration.github-agent-identity。宿主可屏蔽这一条或用自己的规则覆盖选项；运行 mise run harness-setup 后即可从 AGENTS.md 或 CLAUDE.md 直接读到本仓配置选择的规则。
+模板默认接纳 `collaboration.github-agent-identity`。每个宿主可按规则 ID 选装。运行 `mise run harness-setup` 后即可从 `AGENTS.md` 或 `CLAUDE.md` 直接读到本仓选择的规则。
 
 ## 仓库如何配合
 
