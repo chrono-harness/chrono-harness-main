@@ -22,7 +22,7 @@ mise run harness-setup
 
 ## 从 Issue 到正式版
 
-在负责产品的仓库开 Issue。仓库的 **Issues → Milestones** 显示目标版本和仍开放的事项。跨仓目标可以将各产品自己的 Issue 登记为子事项，GitHub 会从它们的实际开关状态计算进度。[模板路线图](https://github.com/chrono-harness/chrono-harness-template/issues/48) · [chrono-pr 发行试点](https://github.com/chrono-harness/chrono-harness-pr/issues/5)
+在负责产品的仓库开 Issue。仓库的 **Issues → Milestones** 显示目标版本和仍开放的事项。跨仓目标可以将各产品自己的 Issue 登记为子事项，GitHub 会从它们的实际开关状态计算进度。[Copier 路线图](https://github.com/chrono-harness/chrono-harness-copier/issues/6) · [chrono-pr 发行试点](https://github.com/chrono-harness/chrono-harness-pr/issues/5)
 
 ```text
 Issue --> 本仓版本里程碑 --> PR 合入 dev --> 本仓检查通过
