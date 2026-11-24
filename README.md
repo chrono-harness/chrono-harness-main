@@ -66,7 +66,7 @@ main
 
 Copier 的 `copier.yml` 按选装项登记需要安装的命令。更新上游安装依赖时改这一份表。宿主用 Copier 更新，提交自己的选项和生成的 mise 清单，之后本地与 CI 按这份清单安装。例如只选 `verus` 会装入配套的 Rust 和 Verus，同时选 `judge-ci` 会合并这两项所需的工具。新项目从绿色模板按钮取得已生成的文件。[上游依赖表](https://github.com/chrono-harness/chrono-harness-copier/blob/0f095e0ae039c94a6df262a8322518221c659b4f/copier.yml) · [独立示例的升级](https://github.com/chrono-harness/chrono-harness-example/pull/125)
 
-产品仓负责本仓的包依赖和验证。对 Rust 与 Verus 共用的库，runner 正在让 Cargo 和 cargo-verus 读取相同的包声明与锁定版本。实际消费还须核对编译器读取的源、导入的证明产物及本次验证的原始结果。跨仓调用通过发布物和公开协议进行。各仓已接入的证明根及尚待验证的范围列在对应事项。[runner 采用范围](https://github.com/chrono-harness/chrono-harness-runner/issues/63) · [其余产品的形式化验收](https://github.com/chrono-harness/chrono-harness-judge-projects/issues/23)
+产品仓负责本仓的包依赖和验证。runner 的六个包共用仓库根的 `Cargo.toml` 和 `Cargo.lock`。修改共用依赖时在 `[workspace.dependencies]` 改一次，原生构建、原生测试和 cargo-verus 使用同一解析结果。登记证明的包和目标后，bootstrap 收取各目标的原始报告、编译器依赖记录及库。其他仓经公开发行和协议调用 runner 与 bootstrap。[runner 的 Cargo workspace](https://github.com/chrono-harness/chrono-harness-runner/blob/98cbe243227e8cabb958d1dbebb207241972ea21/Cargo.toml) · [共享证明包验收](https://github.com/chrono-harness/chrono-harness-host-bootstrap/issues/20#issuecomment-7133353314) · [组织形式化覆盖](https://github.com/chrono-harness/chrono-harness-judge-projects/issues/23)
 
 在 Python 示例仓，`chrono-ci detect` 根据固定 Git 提交和宿主登记选择执行单元。单元调用 runner 的 `chrono-harness check`。CI 判官从各工具的公开命令读取所需数据。下图中的连线表示一次 PR 的实际调用或产物交接。[示例工作流](https://github.com/chrono-harness/chrono-harness-example/blob/1c5f98e72f964b9fd2a19bad18de55ecaadc6a74/.github/workflows/chrono-ci.yml) · [CI 判官的已安装工具接口](https://github.com/chrono-harness/chrono-harness-judge-ci/blob/2611c5f34b261b783c56d837a6d2d7a1a335136f/README.md)
 
