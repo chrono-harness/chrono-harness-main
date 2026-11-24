@@ -48,6 +48,8 @@ Issue、PR、评论或评审先用平常的话说明工作，再在末尾附一�
 
 > **Agent** `codex/root` · **action** `release` · **state** `succeeded` · **target** `chrono-harness/chrono-harness-pr/tag/v0.1.5`
 
+可以查看同一协议在[实际工作记录](https://github.com/chrono-harness/chrono-harness-main/issues/15#issuecomment-7138502497)中的显示效果。
+
 这行摘要本身就是机器读取的字段。Markdown 原文用两行 HTML 注释包住摘要，两行拥有同一个 `event` UUID。开头还记录 `session`、直接父会话 `parent` 和 `task`。GitHub 渲染时隐藏这两行。每次有意义的进展换一个 `event`，并行会话各有自己的 `session`，同一项工作沿用同一个 `task`。汇总时按 `event` 去重，用 GitHub 的发布时间还原顺序。
 
 在采用模板的宿主，以下命令读取指定 PR 的原始正文、校验配对并输出八个字段。Issue、评论和评审也可用各自 API 返回的 `body`。原始正文中含代码示例或引用时，`event-read` 会区分示例与末尾的顶层事件。
@@ -58,7 +60,7 @@ gh api "repos/$OWNER/$REPO/pulls/$NUMBER" |
 mise exec -- chrono-instructions event-regex
 ```
 
-`event-regex` 输出完整正则，八个捕获组依次是 `event`、`session`、`parent`、`task`、`agent`、`action`、`state`、`target`。关闭标记引用开头捕获的 `event`，两端 UUID 不同或缺失一端都会匹配失败。编写新事件时，把八个字段作为 JSON 传给 `event-format`，再将它生成的三行原样附在正文末尾。作者账号由 GitHub 提供，自报的工作结果可从相应 PR、CI 运行或发行核实。[工具与协议](https://github.com/chrono-harness/chrono-harness-instructions)
+`event-regex` 输出完整正则，八个捕获组依次是 `event`、`session`、`parent`、`task`、`agent`、`action`、`state`、`target`。关闭标记引用开头捕获的 `event`，两端 UUID 不同或缺失一端都会匹配失败。编写新事件时，把八个字段作为 JSON 传给 `event-format`，再将它生成的三行原样附在正文末尾。作者账号由 GitHub 提供，自报的工作结果可从相应 PR、CI 运行或发行核实。[完整正则](https://github.com/chrono-harness/chrono-harness-instructions/blob/1c97c9bf19cc65d26e00d850f6fab67da3467035/assets/instructions/github-event-v3.regex)
 
 模板默认接纳 `collaboration.github-agent-identity`。每个宿主可按规则 ID 选装。运行 `mise run harness-setup` 后即可从 `AGENTS.md` 或 `CLAUDE.md` 直接读到本仓选择的规则。
 
