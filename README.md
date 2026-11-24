@@ -42,19 +42,21 @@ Issue --> 本仓版本里程碑 --> PR 合入 dev --> 本仓检查通过
 
 模板的路线图工作流从本仓版本计划和 GitHub Releases 更新里程碑。每个产品单独采用发布自动化；chrono-pr 试点跟踪从 dev 自动创建预览、验证真实下游和晋升 main 的实施情况。
 
-### 在 GitHub 上认出发帖的 agent
+### 从 GitHub 正文读取 agent 的工作事件
 
-打开 Issue、PR、评论或评审，先看 GitHub 记录的作者，再看该条正文末尾的 `Chrono-Agent-v1`。共用一个账号时，`agent` 给出运行工具和任务路径，`session` 区分同一路径上的各次会话，`parent` 指向直接委派者的公开会话。根会话的 `parent` 为 `-`。可以用完整 UUID 在组织的 Issues 和 Pull requests 中搜索同一会话及其子任务，再按正文中的字段区分二者。[协议和实际 Issue](https://github.com/chrono-harness/chrono-harness-instructions/issues/16)
+新 Issue、PR、评论或评审把动作和状态放在正文最后一条纯文本事件中。GitHub 提供发布账号和对象地址，事件记录会话自报的 agent 路径、直接父会话、任务和具体进展。一次任务可由多个会话继续，各自保留独立 session。一个 task 下的每次有意义变化各有 event。已经开始的检查进入等待时发一次 ci.wait/waiting，收到真实结果后用同一 task 写 check/succeeded 或 check/failed。[真实事件](https://github.com/chrono-harness/chrono-harness-instructions/pull/21)
 
-例如，用 GitHub CLI 读取该 Issue 的登录账号和原始正文。普通 PR 讨论也可使用相同的 Issues API。查 PR 评审正文和行内评论时，分别读取 `pulls/编号/reviews` 和 `pulls/编号/comments`。
+在已选装的宿主用以下命令读取真实 PR 正文；输出 JSON 的字段顺序为 agent、session、parent、task、event、action、state、target。root 的 parent 写 -，普通评论和评审可分别从 issues/编号/comments、pulls/编号/reviews、pulls/编号/comments 获取原文。
 
-```sh
-repo=chrono-harness/chrono-harness-instructions
-gh api "repos/$repo/issues/16" --jq '{account: .user.login, body: .body}'
-gh api --paginate "repos/$repo/issues/16/comments" --jq '.[] | {account: .user.login, body: .body}'
-```
+~~~sh
+gh api repos/chrono-harness/chrono-harness-instructions/pulls/21 |
+  jq -j .body | mise exec -- chrono-instructions event-read
+mise exec -- chrono-instructions event-regex
+~~~
 
-模板默认接纳 `collaboration.github-agent-identity`。使用项目的 `mise run harness-setup` 刷新上游指令。页脚由发言会话自报。历史内容缺少有效署名时，会话归属为未知。
+编写新事件时，将八个实际值写成 JSON 后交给 chrono-instructions event-format。新会话、任务和事件各自生成公开随机小写 UUIDv4。独立任务、直接父会话和具体 GitHub 对象的写法见可继承的默认规则。相同 event 的重复投递合并，遇到字段冲突时记录未知；保留原始 GitHub 时间，乱序到达的记录不会自动改写之前的结论。完整行可以由他人复制，作者身份和完成状态仍需对照 GitHub 账号及实际 PR、检查或发布原件。[协议与可复制正则](https://github.com/chrono-harness/chrono-harness-instructions/blob/8c7c190bedb200323303dbb2b44b2df7fb6c0b7b/assets/instructions/github-event-v2.regex)
+
+模板默认接纳 collaboration.github-agent-identity。宿主可屏蔽这一条或用自己的规则覆盖选项；运行 mise run harness-setup 后即可从 AGENTS.md 或 CLAUDE.md 直接读到本仓配置选择的规则。
 
 ## 仓库如何配合
 
