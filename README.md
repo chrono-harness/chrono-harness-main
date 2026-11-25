@@ -18,7 +18,7 @@ mise run harness-setup
 
 绿色模板默认安装最新公开测试版。已有项目使用 Copier 的默认选项时安装配方固定的版本。安装通道适用于任意分支和直接检出的提交。要只在本次安装选择正式版，运行 `CHRONO_TOOL_CHANNEL=stable mise run harness-setup`。使用 `preview` 可选择最新测试版，也可指定完整发行标签。每个选中的组织工具都需要有对应的公开发行。默认工具正式版的发布进度见[项目路线图](https://github.com/chrono-harness/chrono-harness-main/issues/15)。
 
-要保存项目选择，在 Copier 中设置 `tool_install_channels`，或用 `tool_versions` 为单个命令固定标签，例如 `{"chrono-pr":"v0.1.12"}`。本次命令的 `CHRONO_TOOL_CHANNEL` 优先，其次是单个工具的标签，最后使用项目的默认通道。运行 `mise current` 查看实际安装版本，再从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。[Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
+要混合使用多个版本，可在 Copier 中设置 `tool_install_channels=preview`，并为 `tool_versions` 填写 `{"chrono-pr":"stable","chrono-diagnostics":"v0.1.0"}`。这样 `chrono-pr` 跟随最新正式版，`chrono-diagnostics` 固定在指定标签，其余已选工具跟随最新测试版。本次命令的 `CHRONO_TOOL_CHANNEL` 优先于这些选择。运行 `mise current` 查看实际安装版本，再从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。[绿色模板的完整命令](https://github.com/chrono-harness/chrono-harness-template/blob/dev/.chrono-harness/USAGE.md#保存各工具的版本选择) · [Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
 
 ## 开发组件
 
