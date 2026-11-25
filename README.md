@@ -13,7 +13,7 @@ mise trust
 mise run harness-setup
 ```
 
-本次安装要使用最新正式版，将第二条命令换成 `CHRONO_TOOL_CHANNEL=stable mise run harness-setup`。绿色模板 v0.1.2 已在 macOS arm64 和 Linux x86_64 上首次安装并重新安装全部 20 个产品的正式版。[绿色模板 v0.1.2](https://github.com/chrono-harness/chrono-harness-template/releases/tag/v0.1.2) · [双平台验收](https://github.com/chrono-harness/chrono-harness-example/actions/runs/45703932847)
+本次安装要使用最新正式版，将第二条命令换成 `CHRONO_TOOL_CHANNEL=stable mise run harness-setup`。以后在同一检出再次运行这条命令，就会重新解析所选工具的最新正式版。绿色模板已在 macOS arm64 和 Linux x86_64 验收全部 20 个产品的首装和重装，也已在 macOS 实测跨发行原地升级。[最新正式模板](https://github.com/chrono-harness/chrono-harness-template/releases/latest) · [双平台安装](https://github.com/chrono-harness/chrono-harness-template/issues/97#issuecomment-7177407911) · [原地升级](https://github.com/chrono-harness/chrono-harness-template/issues/97#issuecomment-7178130764)
 
 已有项目可以直接使用 Copier。准备好 Git、uv 和 mise，在项目根目录执行以下命令。Copier 会询问 GitHub 仓库名并记录所选模板版本。默认安装各工具的已发布命令、Rust 和 Verus。按空格可以取消本项目用不到的选项，也可以全部取消。
 
