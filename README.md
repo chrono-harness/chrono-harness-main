@@ -14,7 +14,7 @@ mise trust
 mise run harness-setup
 ```
 
-安装后，从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。项目自己的工具选择保存在 `.chrono-harness/template-answers.yml`，mise 按项目记录的版本和 SHA-256 安装各工具。调整选项或升级已有项目时，使用模板的 Copier 更新命令。[Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
+安装后，从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。项目自己的工具选择保存在 `.chrono-harness/template-answers.yml`。要试用开发通道，在 Copier 的 `tool_install_channels` 选择 `dev`。绿色模板已选用这项策略。在开发分支每次运行 `mise run harness-setup` 都会重新查询所选工具的测试版并校验当前平台的 SHA-256。用 `mise current` 可查看实际采用的版本。调整选项或升级已有项目时，使用模板的 Copier 更新命令。[Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
 
 ## 开发组件
 
@@ -88,7 +88,7 @@ main
 
 ### 工具和证明的依赖在哪里改
 
-Copier 的 `copier.yml` 按选装项登记需要安装的命令。更新上游安装依赖时改这一份表。宿主用 Copier 更新，提交自己的选项和生成的 mise 清单，之后本地与 CI 按这份清单安装。例如只选 `verus` 会装入配套的 Rust 和 Verus，同时选 `judge-ci` 会合并这两项所需的工具。新项目从绿色模板按钮取得已生成的文件。[上游依赖表](https://github.com/chrono-harness/chrono-harness-copier/blob/0f095e0ae039c94a6df262a8322518221c659b4f/copier.yml) · [独立示例的升级](https://github.com/chrono-harness/chrono-harness-example/pull/125)
+Copier 的 `copier.yml` 按选装项登记需要安装的命令。更新上游安装依赖时改这一份表。宿主用 Copier 更新并提交自己的选项。选用开发通道时，本地与 CI 均在安装时解析版本。集成分支可通过 `integration_tool_tags` 固定单个工具的发行标签。Rust 和 Verus 使用依赖表中配套的版本。例如只选 `verus` 会装入配套的 Rust 和 Verus，同时选 `judge-ci` 会合并这两项所需的工具。新项目从绿色模板按钮取得已生成的文件。[上游依赖表](https://github.com/chrono-harness/chrono-harness-copier/blob/0f095e0ae039c94a6df262a8322518221c659b4f/copier.yml) · [独立示例的升级](https://github.com/chrono-harness/chrono-harness-example/pull/125)
 
 产品仓负责本仓的包依赖和验证。runner 的六个包共用仓库根的 `Cargo.toml` 和 `Cargo.lock`。修改共用依赖时在 `[workspace.dependencies]` 改一次，原生构建、原生测试和 cargo-verus 使用同一解析结果。登记证明的包和目标后，bootstrap 收取各目标的原始报告、编译器依赖记录及库。其他仓经公开发行和协议调用 runner 与 bootstrap。[runner 的 Cargo workspace](https://github.com/chrono-harness/chrono-harness-runner/blob/98cbe243227e8cabb958d1dbebb207241972ea21/Cargo.toml) · [共享证明包验收](https://github.com/chrono-harness/chrono-harness-host-bootstrap/issues/20#issuecomment-7133353314) · [组织形式化覆盖](https://github.com/chrono-harness/chrono-harness-judge-projects/issues/23)
 
