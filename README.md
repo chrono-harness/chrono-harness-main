@@ -1,5 +1,7 @@
 # Chrono Harness
 
+**[项目路线图与进度](https://github.com/chrono-harness/chrono-harness-main/issues/15)** · 查看本轮目标、已验收场景、当前工作和下一步。
+
 从这里为项目接入 Chrono Harness，或找到负责某项功能的开发仓库。
 
 ## 在自己的项目中使用
@@ -23,8 +25,6 @@ mise run harness-setup
 ## 从 Issue 到正式版
 
 新事项怎样分类、分支和 PR 怎样命名，以及何时关闭 Issue，见[组织协作规范](docs/contributing.md)。
-
-[SPEC 开发路线图](https://github.com/chrono-harness/chrono-harness-main/issues/15) 按固定版本的条款列出 93 个验收场景。每个场景链接到负责产品的 Issue，可查看依赖、验收条件和实际交付。
 
 在负责产品的仓库开 Issue。仓库的 **Issues → Milestones** 显示目标版本和仍开放的事项。跨仓目标可以将各产品自己的 Issue 登记为子事项，GitHub 会从它们的实际开关状态计算进度。[Copier 路线图](https://github.com/chrono-harness/chrono-harness-copier/issues/6) · [chrono-pr 发行试点](https://github.com/chrono-harness/chrono-harness-pr/issues/5)
 
