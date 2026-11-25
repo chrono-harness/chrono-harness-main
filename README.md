@@ -16,7 +16,9 @@ mise trust
 mise run harness-setup
 ```
 
-安装后，从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。项目自己的工具选择保存在 `.chrono-harness/template-answers.yml`。要试用开发通道，在 Copier 的 `tool_install_channels` 选择 `dev`。绿色模板已选用这项策略。在开发分支每次运行 `mise run harness-setup` 都会重新查询所选工具的测试版并校验当前平台的 SHA-256。用 `mise current` 可查看实际采用的版本。调整选项或升级已有项目时，使用模板的 Copier 更新命令。[Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
+绿色模板默认安装最新公开测试版。已有项目使用 Copier 的默认选项时安装配方固定的版本。安装通道适用于任意分支和直接检出的提交。要只在本次安装选择正式版，运行 `CHRONO_TOOL_CHANNEL=stable mise run harness-setup`。使用 `preview` 可选择最新测试版，也可指定完整发行标签。每个选中的组织工具都需要有对应的公开发行。默认工具正式版的发布进度见[项目路线图](https://github.com/chrono-harness/chrono-harness-main/issues/15)。
+
+要保存项目选择，在 Copier 中设置 `tool_install_channels`，或用 `tool_versions` 为单个命令固定标签，例如 `{"chrono-pr":"v0.1.12"}`。本次命令的 `CHRONO_TOOL_CHANNEL` 优先，其次是单个工具的标签，最后使用项目的默认通道。运行 `mise current` 查看实际安装版本，再从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。[Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
 
 ## 开发组件
 
