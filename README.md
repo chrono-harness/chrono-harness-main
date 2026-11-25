@@ -6,7 +6,14 @@
 
 ## 在自己的项目中使用
 
-创建新仓库可以直接点击 [Use this template](https://github.com/chrono-harness/chrono-harness-template/generate)。新仓的根指南包含基础规则，首次检出按 README 运行安装。
+在 GitHub 点击 **Use this template → Create a new repository** 创建新仓库。克隆新仓库并安装 mise 后，在仓库根目录运行以下命令。默认安装各工具最新的公开测试版（`preview`）。[从绿色模板创建仓库](https://github.com/chrono-harness/chrono-harness-template/generate)
+
+```sh
+mise trust
+mise run harness-setup
+```
+
+本次安装要使用最新正式版，将第二条命令换成 `CHRONO_TOOL_CHANNEL=stable mise run harness-setup`。绿色模板 v0.1.2 已在 macOS arm64 和 Linux x86_64 上首次安装并重新安装全部 20 个产品的正式版。[绿色模板 v0.1.2](https://github.com/chrono-harness/chrono-harness-template/releases/tag/v0.1.2) · [双平台验收](https://github.com/chrono-harness/chrono-harness-example/actions/runs/45703932847)
 
 已有项目可以直接使用 Copier。准备好 Git、uv 和 mise，在项目根目录执行以下命令。Copier 会询问 GitHub 仓库名并记录所选模板版本。默认安装各工具的已发布命令、Rust 和 Verus。按空格可以取消本项目用不到的选项，也可以全部取消。
 
@@ -16,7 +23,7 @@ mise trust
 mise run harness-setup
 ```
 
-绿色模板默认安装最新公开测试版。已有项目使用 Copier 的默认选项时安装配方固定的版本。安装通道适用于任意分支和直接检出的提交。要只在本次安装选择正式版，运行 `CHRONO_TOOL_CHANNEL=stable mise run harness-setup`。使用 `preview` 可选择最新测试版，也可指定完整发行标签。每个选中的组织工具都需要有对应的公开发行。默认工具正式版的发布进度见[项目路线图](https://github.com/chrono-harness/chrono-harness-main/issues/15)。
+已有项目使用 Copier 的默认选项时安装配方固定的版本。任意分支和直接检出的提交都可通过 `CHRONO_TOOL_CHANNEL` 为本次安装选择 `stable`、`preview` 或完整发行标签。每个选中的组织工具都需要有对应的公开发行。
 
 逐工具选版需要 Copier 模板 v0.1.34 或更新版。已采用旧模板的项目先更新模板。要混合使用多个版本，可在 Copier 中设置 `tool_install_channels=preview`，并为 `tool_versions` 填写 `{"chrono-pr":"stable","chrono-diagnostics":"v0.1.0"}`。这样 `chrono-pr` 跟随最新正式版，`chrono-diagnostics` 固定在指定标签，其余已选工具跟随最新测试版。本次命令的 `CHRONO_TOOL_CHANNEL` 优先于这些选择。运行 `mise current` 查看实际安装版本，再从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。[绿色模板的完整命令](https://github.com/chrono-harness/chrono-harness-template/blob/dev/.chrono-harness/USAGE.md#保存各工具的版本选择) · [Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
 
