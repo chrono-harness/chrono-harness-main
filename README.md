@@ -44,27 +44,18 @@ Issue --> 本仓版本里程碑 --> PR 合入 dev --> 本仓检查通过
 
 模板的路线图工作流从本仓版本计划和 GitHub Releases 更新里程碑。每个产品单独采用发布自动化；chrono-pr 试点跟踪从 dev 自动创建预览、验证真实下游和晋升 main 的实施情况。
 
-### 从 GitHub 正文读取 agent 的工作事件
+### 在 GitHub 上识别参与工作的 agent
 
-Issue、PR、评论或评审先说明完成了哪项工作，再在正文末尾附一条事件。GitHub 页面直接显示 agent、完整公开会话 UUID、本次使用的模型、动作、状态和目标。下面是本仓采用事项中的一行。
+打开 Issue 或 PR，在事件署名行可以看到执行该动作的 agent、完整会话 UUID 和模型。同一项工作可以有多个会话。可在本组织的真实记录里对照[根会话](https://github.com/chrono-harness/chrono-harness-instructions/issues/48#issuecomment-7159796617)和[子会话](https://github.com/chrono-harness/chrono-harness-instructions/issues/48#issuecomment-7159782902)。
 
-> **Agent** `codex/root/mixed_plan` · **session** `81b87ce4-e785-40f0-bd3d-3a05584aa3c5` · **model** `gpt-6` · **action** `issue` · **state** `started` · **target** `self`
-
-[读取这条公开事件](https://github.com/chrono-harness/chrono-harness-main/issues/33)
-
-同一项工作的参与者共用 `task`。每个会话保留自己的 `session`。同一任务可以包含多个会话和模型，同一会话切换模型时也按当次事件填写 `model`。无法确定型号时填写 `unknown`。GitHub 隐藏的首尾注释记录同一个 `event`，开头同时保存 `parent` 和 `task`。汇总时按 `event` 去重，再用 GitHub 的发布时间还原顺序。
-
-在采用模板的宿主，以下命令从原始 PR 正文读取末尾的顶层事件。Issue、评论和评审也可以从各自的 API 读取 `body`。读取器输出九个字段，遇到历史 v2 或 v3 记录时将 `model` 标为 `unknown`。
+在采用模板的宿主中，可用已安装的命令从原始 PR 正文读取事件。
 
 ```sh
 gh api "repos/$OWNER/$REPO/pulls/$NUMBER" |
   jq -j .body | mise exec -- chrono-instructions event-read
-mise exec -- chrono-instructions event-regex
 ```
 
-编写新事件时，将 `agent`、`session`、`parent`、`task`、`event`、`model`、`action`、`state` 和 `target` 作为 JSON 传给 `event-format`，把生成的三行 v4 记录原样附在正文末尾。`event-regex` 给出新格式的完整正则。GitHub 提供作者账号，对应的 PR、CI 或发行记录可用来核实自报结果。
-
-模板默认接纳 `collaboration.github-agent-identity`。每个宿主可按规则 ID 选装。运行 `mise run harness-setup` 后即可从 `AGENTS.md` 或 `CLAUDE.md` 直接读到本仓选择的规则。
+事件写法、字段、正则和历史版本由[指令库的 GitHub 工作事件规范](https://github.com/chrono-harness/chrono-harness-instructions/blob/dev/README.md#github-工作事件)维护。宿主在 `.chrono-harness/rules.json` 选用规则，运行 `mise run harness-setup` 后可从根指南直接阅读所选正文。
 
 ## 仓库如何配合
 
