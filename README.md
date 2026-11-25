@@ -46,15 +46,15 @@ Issue --> 本仓版本里程碑 --> PR 合入 dev --> 本仓检查通过
 
 ### 从 GitHub 正文读取 agent 的工作事件
 
-Issue、PR、评论或评审先用平常的话说明工作，再在末尾附一条工作事件。例如发布者可以写“已发布 chrono-pr v0.1.5”，页面在下方显示一行摘要。
+Issue、PR、评论或评审先说明完成了哪项工作，再在正文末尾附一条事件。GitHub 页面直接显示 agent、完整公开会话 UUID、本次使用的模型、动作、状态和目标。下面是本仓采用事项中的一行。
 
-> **Agent** `codex/root` · **action** `release` · **state** `succeeded` · **target** `chrono-harness/chrono-harness-pr/tag/v0.1.5`
+> **Agent** `codex/root/mixed_plan` · **session** `81b87ce4-e785-40f0-bd3d-3a05584aa3c5` · **model** `gpt-6` · **action** `issue` · **state** `started` · **target** `self`
 
-可以查看同一协议在[实际工作记录](https://github.com/chrono-harness/chrono-harness-main/issues/15#issuecomment-7138502497)中的显示效果。
+[读取这条公开事件](https://github.com/chrono-harness/chrono-harness-main/issues/33)
 
-这行摘要本身就是机器读取的字段。Markdown 原文用两行 HTML 注释包住摘要，两行拥有同一个 `event` UUID。开头还记录 `session`、直接父会话 `parent` 和 `task`。GitHub 渲染时隐藏这两行。每次有意义的进展换一个 `event`，并行会话各有自己的 `session`，同一项工作沿用同一个 `task`。汇总时按 `event` 去重，用 GitHub 的发布时间还原顺序。
+同一项工作的参与者共用 `task`。每个会话保留自己的 `session`。同一任务可以包含多个会话和模型，同一会话切换模型时也按当次事件填写 `model`。无法确定型号时填写 `unknown`。GitHub 隐藏的首尾注释记录同一个 `event`，开头同时保存 `parent` 和 `task`。汇总时按 `event` 去重，再用 GitHub 的发布时间还原顺序。
 
-在采用模板的宿主，以下命令读取指定 PR 的原始正文、校验配对并输出八个字段。Issue、评论和评审也可用各自 API 返回的 `body`。原始正文中含代码示例或引用时，`event-read` 会区分示例与末尾的顶层事件。
+在采用模板的宿主，以下命令从原始 PR 正文读取末尾的顶层事件。Issue、评论和评审也可以从各自的 API 读取 `body`。读取器输出九个字段，遇到历史 v2 或 v3 记录时将 `model` 标为 `unknown`。
 
 ```sh
 gh api "repos/$OWNER/$REPO/pulls/$NUMBER" |
@@ -62,7 +62,7 @@ gh api "repos/$OWNER/$REPO/pulls/$NUMBER" |
 mise exec -- chrono-instructions event-regex
 ```
 
-`event-regex` 输出完整正则，八个捕获组依次是 `event`、`session`、`parent`、`task`、`agent`、`action`、`state`、`target`。关闭标记引用开头捕获的 `event`，两端 UUID 不同或缺失一端都会匹配失败。编写新事件时，把八个字段作为 JSON 传给 `event-format`，再将它生成的三行原样附在正文末尾。作者账号由 GitHub 提供，自报的工作结果可从相应 PR、CI 运行或发行核实。[完整正则](https://github.com/chrono-harness/chrono-harness-instructions/blob/1c97c9bf19cc65d26e00d850f6fab67da3467035/assets/instructions/github-event-v3.regex)
+编写新事件时，将 `agent`、`session`、`parent`、`task`、`event`、`model`、`action`、`state` 和 `target` 作为 JSON 传给 `event-format`，把生成的三行 v4 记录原样附在正文末尾。`event-regex` 给出新格式的完整正则。GitHub 提供作者账号，对应的 PR、CI 或发行记录可用来核实自报结果。
 
 模板默认接纳 `collaboration.github-agent-identity`。每个宿主可按规则 ID 选装。运行 `mise run harness-setup` 后即可从 `AGENTS.md` 或 `CLAUDE.md` 直接读到本仓选择的规则。
 
