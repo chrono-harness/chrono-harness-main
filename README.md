@@ -159,7 +159,7 @@ PR
 
 主仓的维护由业务事件唤醒。每个协调者只让一个进程执行维护，处理完队列就退出。到期只改变产物的删除资格。租约已释放、源码已保全的产物在下一次成功处理它的轮次回收。如果机器长期没有业务事件，也没有显式维护，实际占用可以超过保留窗口。[固定维护合同](https://github.com/ChronoAIProject/chrono-harness/blob/f619e1c48f332429e53f30cddc5ab77dff048bdb/SPEC.md#L1483)
 
-拆仓后的工作树工具、事件发送端和示例宿主正在采用这个合同。示例之前在 macOS、Linux 上验证过用每小时任务清理闲置树和缓存。各宿主的迁移验收仍需核对实际触发者、独占租约、最后一个读者退出后的物理回收，以及有价值的原件在窗口内转存后可读回。[工作树服务](https://github.com/chrono-harness/chrono-harness-worktree/issues/62) · [事件发送端](https://github.com/chrono-harness/chrono-harness-runner/issues/109) · [示例宿主](https://github.com/chrono-harness/chrono-harness-example/issues/222)
+示例宿主的 dev 分支已采用正式发行的事件维护服务。macOS 用户可安装 launchd 套接字，Linux 用户可安装 systemd 用户套接字。在 macOS 和 Ubuntu 上，三个并行业务事件按同一把锁依次得到处理。工作树和 Python 缓存到期后，在下一次业务事件触发的维护中实际回收。已转存的副本仍可读回，有效的 PR 提醒也继续保留。[示例安装说明](https://github.com/chrono-harness/chrono-harness-example/blob/d2b64f871ed82740460cc6af66c950a9c9313be0/README.md) · [双平台验收](https://github.com/chrono-harness/chrono-harness-example/actions/runs/45703563177)
 
 示例启用文件日志时，worktree 调用宿主安装的 `chrono-diagnostics expire-logs-v1`。该命令按日志策略回收过期文件，并向维护进程返回删除数量、占用或具体的失败路径。macOS 和 Ubuntu 均用已发布的 runner 写入日志、用独立发行完成了回收与错误验收。[双平台运行](https://github.com/chrono-harness/chrono-harness-example/actions/runs/45243841345) · [示例采用](https://github.com/chrono-harness/chrono-harness-example/pull/38)
 
