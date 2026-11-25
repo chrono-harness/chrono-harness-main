@@ -1,4 +1,4 @@
-_commit: v0.1.32
+_commit: v0.1.33-alpha.87
 _src_path: gh:chrono-harness/chrono-harness-copier
 check_command: chrono-instructions rules --host-root .
 check_os: ubuntu-24.04
@@ -25,9 +25,14 @@ features:
 - worktree
 - verus
 generate_check: true
+github_templates: true
+local_check_retention: false
 manage_roadmap: true
+native_check_keep_seconds: 0
 project_guide: ''
 publisher_workflow: Release
 release_plan: {}
 repository: chrono-harness/chrono-harness-main
 required_check: check
+strict_host_adapters: {}
+tool_install_channels: pinned
