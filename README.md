@@ -18,7 +18,7 @@ mise run harness-setup
 
 绿色模板默认安装最新公开测试版。已有项目使用 Copier 的默认选项时安装配方固定的版本。安装通道适用于任意分支和直接检出的提交。要只在本次安装选择正式版，运行 `CHRONO_TOOL_CHANNEL=stable mise run harness-setup`。使用 `preview` 可选择最新测试版，也可指定完整发行标签。每个选中的组织工具都需要有对应的公开发行。默认工具正式版的发布进度见[项目路线图](https://github.com/chrono-harness/chrono-harness-main/issues/15)。
 
-要混合使用多个版本，可在 Copier 中设置 `tool_install_channels=preview`，并为 `tool_versions` 填写 `{"chrono-pr":"stable","chrono-diagnostics":"v0.1.0"}`。这样 `chrono-pr` 跟随最新正式版，`chrono-diagnostics` 固定在指定标签，其余已选工具跟随最新测试版。本次命令的 `CHRONO_TOOL_CHANNEL` 优先于这些选择。运行 `mise current` 查看实际安装版本，再从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。[绿色模板的完整命令](https://github.com/chrono-harness/chrono-harness-template/blob/dev/.chrono-harness/USAGE.md#保存各工具的版本选择) · [Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
+逐工具选版需要 Copier 模板 v0.1.34 或更新版。已采用旧模板的项目先更新模板。要混合使用多个版本，可在 Copier 中设置 `tool_install_channels=preview`，并为 `tool_versions` 填写 `{"chrono-pr":"stable","chrono-diagnostics":"v0.1.0"}`。这样 `chrono-pr` 跟随最新正式版，`chrono-diagnostics` 固定在指定标签，其余已选工具跟随最新测试版。本次命令的 `CHRONO_TOOL_CHANNEL` 优先于这些选择。运行 `mise current` 查看实际安装版本，再从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。[绿色模板的完整命令](https://github.com/chrono-harness/chrono-harness-template/blob/dev/.chrono-harness/USAGE.md#保存各工具的版本选择) · [Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
 
 ## 开发组件
 
@@ -81,7 +81,7 @@ main
 
 ### 工具和证明的依赖在哪里改
 
-Copier 的 `copier.yml` 按选装项登记需要安装的命令。更新上游安装依赖时改这一份表。宿主用 Copier 更新并提交自己的选项。选用开发通道时，本地与 CI 均在安装时解析版本。集成分支可通过 `integration_tool_tags` 固定单个工具的发行标签。Rust 和 Verus 使用依赖表中配套的版本。例如只选 `verus` 会装入配套的 Rust 和 Verus，同时选 `judge-ci` 会合并这两项所需的工具。新项目从绿色模板按钮取得已生成的文件。[上游依赖表](https://github.com/chrono-harness/chrono-harness-copier/blob/0f095e0ae039c94a6df262a8322518221c659b4f/copier.yml) · [独立示例的升级](https://github.com/chrono-harness/chrono-harness-example/pull/125)
+Copier 的 `copier.yml` 按选装项登记需要安装的命令。更新上游安装依赖时改这一份表。宿主用 Copier 更新并提交自己的选项。在任意分支或直接检出提交时，`stable` 和 `preview` 都在每次安装时解析。要固定单个工具，在 `tool_versions` 中填写该工具的精确发行标签。Rust 和 Verus 使用依赖表中配套的版本。例如只选 `verus` 会装入配套的 Rust 和 Verus，同时选 `judge-ci` 会合并这两项所需的工具。新项目从绿色模板按钮取得已生成的文件。[上游依赖表](https://github.com/chrono-harness/chrono-harness-copier/blob/v0.1.34/copier.yml) · [独立示例的升级](https://github.com/chrono-harness/chrono-harness-example/pull/125)
 
 产品仓负责本仓的包依赖和验证。runner 的六个包共用仓库根的 `Cargo.toml` 和 `Cargo.lock`。修改共用依赖时在 `[workspace.dependencies]` 改一次，原生构建、原生测试和 cargo-verus 使用同一解析结果。登记证明的包和目标后，bootstrap 收取各目标的原始报告、编译器依赖记录及库。其他仓经公开发行和协议调用 runner 与 bootstrap。[runner 的 Cargo workspace](https://github.com/chrono-harness/chrono-harness-runner/blob/98cbe243227e8cabb958d1dbebb207241972ea21/Cargo.toml) · [共享证明包验收](https://github.com/chrono-harness/chrono-harness-host-bootstrap/issues/20#issuecomment-7133353314) · [组织形式化覆盖](https://github.com/chrono-harness/chrono-harness-judge-projects/issues/23)
 

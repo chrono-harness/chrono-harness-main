@@ -17,4 +17,8 @@ jobs:
         with:
           version: 2026.11.12
           cache: false
+          install: false
+      - run: sh .chrono-harness/install-tools.sh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - run: mise run harness-check
