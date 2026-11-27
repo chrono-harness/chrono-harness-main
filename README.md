@@ -27,6 +27,10 @@ mise run harness-setup
 
 逐工具选版需要 Copier 模板 v0.1.34 或更新版。已采用旧模板的项目先更新模板。要混合使用多个版本，可在 Copier 中设置 `tool_install_channels=preview`，并为 `tool_versions` 填写 `{"chrono-pr":"stable","chrono-diagnostics":"v0.1.0"}`。这样 `chrono-pr` 跟随最新正式版，`chrono-diagnostics` 固定在指定标签，其余已选工具跟随最新测试版。本次命令的 `CHRONO_TOOL_CHANNEL` 优先于这些选择。运行 `mise current` 查看实际安装版本，再从根目录的 `AGENTS.md` 或 `CLAUDE.md` 开始工作。[绿色模板的完整命令](https://github.com/chrono-harness/chrono-harness-template/blob/dev/.chrono-harness/USAGE.md#保存各工具的版本选择) · [Copier 选装与更新](https://github.com/chrono-harness/chrono-harness-copier)
 
+### 项目依赖与 GitHub Actions 的自动更新
+
+本组织的仓库使用 Dependabot 每天检查 GitHub Actions 和已登记的项目依赖，更新 PR 默认在必需检查通过后自动合入 `dev`。从绿色模板新建的仓库默认检查 Actions。接入自己的项目时，在 Copier 的 `dependabot_updates` 中选择包管理器、目录和检查频率，并在 GitHub 开启 **Allow auto-merge**、为目标分支设置必需的 PR 检查。设置 `dependabot_auto_merge: false` 可保留更新 PR 并自行合并。harness 工具在安装时按上文选择的通道或固定版本解析。[模板配置与关闭方法](https://github.com/chrono-harness/chrono-harness-template/blob/dev/.chrono-harness/USAGE.md#依赖更新) · [组织各仓的实际运行记录](https://github.com/chrono-harness/chrono-harness-main/issues/50)
+
 ## 开发组件
 
 按下表找到负责该功能的仓库，从其默认分支 `dev` 单独检出。根指南给出本仓的安装和验证命令，修改也向该仓的 `dev` 提 PR。各工具仓单独发布发行包，`main` 分支用于正式版。要查看业务项目怎样接入并运行 CI，可以从 Python 示例的工作流开始。[业务示例](https://github.com/chrono-harness/chrono-harness-example)
