@@ -2,7 +2,7 @@
 
 **[项目路线图与进度](https://github.com/chrono-harness/chrono-harness-main/issues/15)** · 查看本轮目标、已验收场景、当前工作和下一步。
 
-从这里为项目接入 Chrono Harness，或找到负责某项功能的开发仓库。
+从这里为项目接入 Chrono Harness，或找到负责某项功能的开发仓库。第一次参与开发，可以从一个小问题读起：一份报告写完，谁会打开它？[项目的长期取舍](docs/project-principles.md)
 
 ## 在自己的项目中使用
 
