@@ -2,6 +2,8 @@
 
 本仓是 Chrono Harness 用户与开发者的入口，维护项目接入步骤、组件索引和历史发行链接。
 
+项目对需求、异常、工作树和验收的长期约定见[项目的长期取舍](docs/project-principles.md)。
+
 ## 本仓开发
 
 [README.md](README.md) 提供项目接入步骤、组件开发入口和历史发行链接。运行 `mise run harness-check` 读取本仓接纳的上游规则。工具实现及发布在对应工具仓进行。
