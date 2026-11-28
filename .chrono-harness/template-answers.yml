@@ -1,4 +1,4 @@
-_commit: v0.1.39
+_commit: v0.1.54
 _src_path: gh:chrono-harness/chrono-harness-copier
 check_command: chrono-instructions rules --host-root .
 check_os: ubuntu-24.04
@@ -41,3 +41,4 @@ install_resolver_artifact: {"version": "0.1.1", "linux_sha256": "8fd9f01086ad928
 dependabot_auto_merge: true
 dependabot_updates:
 - {"package-ecosystem": "github-actions", "directory": "/", "schedule": {"interval": "daily"}, "groups": {"github-actions": {"patterns": ["*"]}}}
+host_release_artifact: {"version": "0.1.12", "linux_sha256": "06f52284ad8b12a71d2402f9b844863af1a10f123b6373f6373b064487da7ab4", "macos_sha256": "148ca8ee0ba4bfb688799aae65b73a9bdd36ac3c0e03d47cade37fc1da48089e"}
